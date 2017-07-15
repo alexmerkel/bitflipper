@@ -1,10 +1,18 @@
-#!/usr/local/bin/python3
+#!/usr/bin/env python3
 
 import os
 import sys
 import re
 import colored
 import requests
+import whois
+
+BOLD = colored.attr("bold")
+RESET = colored.attr("reset")
+RED = colored.fg("red")
+GREEN = colored.fg("green")
+ORANGE = colored.fg("yellow")
+CYAN = colored.fg("light_cyan")
 
 # --------------------------------------------------------------------------- #
 # Gets all valid domains created by bit-flipping one byte of a given domain
@@ -35,7 +43,7 @@ def check(domain, silent=False):
         for result in set(results):
             if apiKey:
                 domainStatus = getDomainStatus(result, apiKey)
-                print(result + ": " + domainStatus)
+                print(BOLD + CYAN + result + RESET + ": " + domainStatus)
             else:
                 print(result)
 
@@ -101,11 +109,21 @@ def getDomainStatus(domain, apiKey):
         status = "unknown"
 
     if "inactive" in status:
-        return colored.attr("bold")+colored.fg("green")+"Available"+colored.attr("reset")
+        status = BOLD + GREEN + "Available" + RESET
     elif "active" in status:
-        return colored.attr("bold")+colored.fg("red")+"Taken"+colored.attr("reset")
+        status = BOLD + RED + "Taken" + RESET
+        w = whois.whois(domain)
+        name = w.name
+        if isinstance(name, list):
+            name = name[0]
+        expDate = w.expiration_date
+        if isinstance(expDate, list):
+            expDate = expDate[0]
+        if (name and expDate):
+            status += " (Reg: " + BOLD + name + RESET + ", exp: " + BOLD + expDate.strftime("%Y-%m-%d") + RESET + ")"
     else:
-        return colored.attr("bold")+colored.fg("orange_1")+"Unknown"+colored.attr("reset")
+        status = BOLD + ORANGE + "Unknown" + RESET
+    return status
 # ########################################################################### #
 
 
@@ -142,7 +160,7 @@ def tryReadingAPIKey():
 if __name__ == "__main__":
     try:
         check(sys.argv[1])
-    except (KeyError, ValueError):
+    except (IndexError, KeyError, ValueError):
         print("Please specify a valid domain to test!\nTry: bitflipper example.com")
     except IOError:
         print("Unable to load valid TLDs")

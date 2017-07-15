@@ -21,7 +21,9 @@ where ```xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx``` is replaced by yo
 Requirements
 ------------
 
-*   [colored package](https://pypi.python.org/pypi/colored)
+*   [python-whois](https://pypi.python.org/pypi/python-whois)
+*   [requests](https://pypi.python.org/pypi/requests)
+*   [colored](https://pypi.python.org/pypi/colored)
 
 
 License
