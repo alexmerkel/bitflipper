@@ -29,6 +29,7 @@ def check(domain, silent=False):
             pass
 
     results = [result.lower() for result in results]
+    results = [result for result in results if result != domain]
     results = [result for result in results if validDomain(result, tlds)]
     if not silent:
         for result in set(results):
