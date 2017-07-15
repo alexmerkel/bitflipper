@@ -119,8 +119,12 @@ def getDomainStatus(domain, apiKey):
         expDate = w.expiration_date
         if isinstance(expDate, list):
             expDate = expDate[0]
-        if (name and expDate):
+        if name and expDate:
             status += " (Reg: " + BOLD + name + RESET + ", exp: " + BOLD + expDate.strftime("%Y-%m-%d") + RESET + ")"
+        elif name:
+            status += " (Reg: " + BOLD + name + RESET + ")"
+        elif expDate:
+            status += " (Exp: " + BOLD + expDate.strftime("%Y-%m-%d") + RESET + ")"
     else:
         status = BOLD + ORANGE + "Unknown" + RESET
     return status
